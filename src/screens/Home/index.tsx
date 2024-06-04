@@ -1,30 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import { Text, View, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import React, {useState} from 'react';
+import { Text, View, TextInput, TouchableOpacity, FlatList, Alert } from 'react-native';
 
 import { Participant } from '../../components/Participant';
 import { styles } from './styles'
 
 export default function Home() {
 
-  const participants = [
-    'Participante 1',
-    'Participante 2',
-    'Participante 3',
-    'Participante 4',
-    'Participante 5',
-    'Participante 6',
-    'Participante 7',
-    'Participante 8',
-    'Participante 9',
-    'Participante 10',
-    'Participante 11',
-    'Participante 12',
-  ]
+  const [participants, setParticipants] = useState(['Participante 1']);
+  
   function handleParticipantAdd() {
-    console.log('Participant added')
+    if(participants.includes('Participante 12')) {
+     return Alert.alert('Participante existe', 'Ja existe um participante com esse nome')
+    }
+    setParticipants(prevState => [...prevState, 'Participante 2'])
+    console.log(participants)
   }
 
   function handleParticipantRemove(name: string) {
+    Alert.alert('Removido', ` Remover o ${name} ?`, [{text: 'Sim',
+     onPress: () => console.log(`Removido ${name}`)}, {text: 'Cancelar', style: 'cancel'}])
     console.log(`Você removeu o particpante ${name}`)
   }
 
