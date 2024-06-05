@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, FlatList, Alert } from 'react-native';
 
 import { Participant } from '../../components/Participant';
@@ -6,20 +6,22 @@ import { styles } from './styles'
 
 export default function Home() {
 
-  const [participants, setParticipants] = useState(['Participante 1']);
-  
+  const [participants, setParticipants] = useState<string[]>([]);
+  const [participantName, setParticipantName] = useState('')
+
   function handleParticipantAdd() {
-    if(participants.includes('Participante 12')) {
-     return Alert.alert('Participante existe', 'Ja existe um participante com esse nome')
+    if (participants.includes(participantName)) {
+      return Alert.alert('Participante existe', 'Ja existe um participante com esse nome')
     }
-    setParticipants(prevState => [...prevState, 'Participante 2'])
-    console.log(participants)
+    setParticipants(prevState => [...prevState, participantName])
+    setParticipantName('')
+    
   }
 
   function handleParticipantRemove(name: string) {
-    Alert.alert('Removido', ` Remover o ${name} ?`, [{text: 'Sim',
-     onPress: () => console.log(`Removido ${name}`)}, {text: 'Cancelar', style: 'cancel'}])
-    console.log(`Você removeu o particpante ${name}`)
+    Alert.alert('Removido', ` Remover o ${name} ?`,
+      [{ text: 'Sim', onPress: () => setParticipants(prevState => prevState.filter(participant => participant !== name)) },
+      { text: 'Cancelar', style: 'cancel' }])
   }
 
   return (
@@ -31,6 +33,8 @@ export default function Home() {
         <TextInput style={styles.input}
           placeholder='Nome do participante'
           placeholderTextColor='#6b6b6b'
+          onChangeText={setParticipantName}
+          value={participantName}
         />
         <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
           <Text style={styles.buttonText}>+</Text>
@@ -38,6 +42,7 @@ export default function Home() {
       </View>
 
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={participants}
         keyExtractor={item => item}
         renderItem={({ item }) => (
